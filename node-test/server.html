@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Vue</title>
+<link rel="stylesheet" href="css/index.css">
+<script src="js/vue.js"></script>
+<script src="ajax/index.js"></script>
+</head>
+<body>
+<div id="my">
+    <div class="box">
+        <ul>
+            <li>姓名:<input type="text" v-model="lists.name"/></li>
+            <li>年龄:<input type="text" v-model="lists.age"/></li>
+            <li>邮箱:<input type="text" v-model="lists.emil"/></li>
+            <li><button @click="add">添加</button><button @click="clearData">清除所有数据</button></li>
+        </ul>
+    </div>
+
+    <div class="box1 clearfloat">
+        <ul v-for="(item,index) in list" :key="index" class="clearfloat">
+            <li v-cloak>{{index+1}}</li>
+            <li v-cloak>{{item.name}}</li>
+            <li v-cloak>{{item.age}}</li>
+            <li v-cloak>{{item.emil}}</li>
+            <li><button @click="del(index)">删除</button></li>
+            <li><button @click="put(item)">修改</button></li>
+        </ul>
+    </div>
+
+    <div class="tc" v-if="flag">
+        <li>姓名:<input type="text"  v-model="getData.name"/></li>
+        <li>年龄:<input type="text"  v-model="getData.age"></li>
+        <li>邮箱:<input type="text"  v-model="getData.emil"/></li>
+        <button @click="putlist()" data-name="getData.name">确定修改</button>
+        <button @click="clears()">取消</button>
+    </div>
+    <div class="bg" v-if="flag"></div>
+</div>
+<script>
+window.onload=function(){
+    var vm = new Vue({
+        el:'#my',
+        data:{
+            flag:false,
+            list:[],
+            lists:{}, 
+            getData:{},
+        },
+        methods:{
+            add(){  //增加
+               if(this.list.length<=1){
+                 var mun = this.list.length 
+                 this.lists.id = mun == 1? mun =2 : mun = 1
+               }else{
+                 this.lists.id = this.totalCount;
+               }
+               Axios.post({
+                   url:'/add',
+                   params:this.lists,
+               }).then(res=>{
+                  this.list.unshift(this.lists)  
+                  this.lists ={}
+               })
+            },
+            clearData(){  //清除所有数据
+                this.list=[];
+                Axios.delete({
+                    url:'/allDelete',
+                    params:this.list,
+                })
+            },
+            del(index){ //删
+                Axios.delete({
+                    url:'/del',
+                    params:index,
+                }).then(res=>{
+                    this.list.splice(index,1) 
+                })
+            },
+            put(item){ 
+                this.flag = true;
+                this.getData = {...item} 
+            },
+            putlist(){
+                this.list.filter((item,i)=>item.id == this.getData.id ? this.list[i]=this.getData : '')
+                Axios.post({ //改
+                    url:'/modify',
+                    params:this.list,
+                }).then(res=>{
+                    this.flag = false;
+                })
+            },
+            clears(){
+                this.flag = false;
+            },
+            gethttp(){
+                Axios.get({
+                    url:'/getData',
+                }).then(res =>{
+                    this.list = res.result
+                })
+
+            },
+        },
+        computed:{
+            totalCount(){  
+				return this.list.reduce((total,cur)=>{
+					return total + cur.id 
+				},0)
+            },
+        },
+        mounted(){
+            this.gethttp()
+        },
+    })
+}
+</script>
+</body>
+</html>

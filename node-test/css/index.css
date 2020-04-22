@@ -1,0 +1,12 @@
+[v-cloak]{display: none}
+.box{border: #ddd 1px solid;padding: 10px; width: 250px; margin: 0 auto;}
+ul{list-style: none;}
+ul,li {padding:0;margin:0; list-style: none;}
+.box1 {border: #ddd 1px solid;padding: 10px; width: 500px; margin: 0 auto; margin-top: 100px;height: auto;}
+.box1 ul{ display: block;}
+.box1 ul li{ float: left;height: 50px;line-height: 50px; padding: 0 10px;}
+.clearfloat:after{display:block;clear:both;content:"";visibility:hidden;height:0} 
+.clearfloat{zoom:1} 
+.tc{position: absolute;background: #fff;border-radius:8px;padding:20px; left: 50%; top: 50%;transform: translate(-50%,-50%);z-index: 2; border:#ddd 1px solid;}
+.tc input{ border: #ddd 1px solid;}
+.bg{background: black;opacity:0.5;height: 100%;width:100%;position: absolute; z-index: 1;left: 0;top: 0;}

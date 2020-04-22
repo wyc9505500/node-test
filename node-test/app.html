@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Vue</title>
+<link rel="stylesheet" href="css/index.css">
+<script src="js/vue.js"></script>
+<script src="ajax/index.js"></script>
+</head>
+<body>
+<div id="my">
+  <div class="list">
+      <ul v-for="(item,index) in list">
+          <li>编号{{index}} --- 姓名：{{item.name}}  ---  邮箱号{{item.emil}}</li>
+      </ul>
+  </div>
+</div>
+<script>
+window.onload=function(){
+    var vm = new Vue({
+        el:'#my',
+        data:{
+            list:[],
+        },
+        methods:{
+          gethttp(){
+            Axios.get({
+                url:'/getData',
+            }).then(res =>{
+                this.list = res.result
+            })
+          }
+        },
+        mounted(){
+            this.gethttp()
+        }
+    })
+}
+</script>
+</body>
+</html>
